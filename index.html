@@ -5,12 +5,52 @@
   <meta charset="UTF-8"/>
 </head>
 <body>
+  <main>
+    <div id='start-message'>To start playing press one of the buttons:</div>
+    <button id='button-rock' class='buttons'>Rock</button>
+    <button id='button-paper' class='buttons'>Paper</button>
+    <button id='button-scissors' class='buttons'>Scissors</button>
+    <div id='player-score'>0</div>
+    <div id='computer-score'>0</div>
+    <div id='game-result-text'></div>
+    <div id='round-result-text'></div>
+    <div id='play-again-div'></div>
+  </main>
   <script>
       let rock = 'ROCK';
       let paper = 'PAPER';
       let scissors = 'SCISSORS';
       let computerScore = 0;
       let playerScore = 0;
+
+      const buttonRock = document.querySelector('#button-rock');
+      const buttonPaper = document.querySelector('#button-paper');
+      const buttonScissors = document.querySelector('#button-scissors');
+      const playerScoreDisplay = document.querySelector('#player-score');
+      const computerScoreDisplay = document.querySelector('#computer-score');
+      const playAgainDiv = document.querySelector('#play-again-div');
+      const startAgainButton = document.createElement('button');
+      startAgainButton.innerText = 'Play Again';
+      let roundResultText = document.querySelector('#round-result-text');
+      let gameResultText = document.querySelector('#game-result-text');
+      let startMessage = document.querySelector('#start-message');
+
+      buttonRock.addEventListener('click', chooseRock);
+      buttonPaper.addEventListener('click', choosePaper);
+      buttonScissors.addEventListener('click', chooseScissors);
+
+      function chooseRock(e) {
+        playRound(rock);
+        showScore();
+      }
+      function choosePaper(e) {
+        playRound(paper);
+        showScore();
+      }
+      function chooseScissors(e) {
+        playRound(scissors);
+        showScore();
+      }
 
       function computerPlay() {
         let randomNumber = Math.floor(Math.random() * 3);
@@ -23,91 +63,76 @@
         }
       }
 
-      function getPlayerSelection() {
-        let userInput = prompt('Choose rock, paper or scissors');
-        let lowerCaseUserInput = userInput.toLowerCase();
-        if (lowerCaseUserInput == 'rock') {
-          return rock;
-        } else if (lowerCaseUserInput == 'paper') {
-          return paper;
-        } else if (lowerCaseUserInput == 'scissors') {
-          return scissors;
-        } else {
-          console.log('Please enter the correct values');
-          return getPlayerSelection();
+      function showScore() {
+        playerScoreDisplay.textContent = playerScore;
+        computerScoreDisplay.textContent = computerScore;
+      }
+
+      function checkWinScore() {
+        if (playerScore == 5 || computerScore == 5) {
+        endGame();
         }
       }
 
-      function resetScore() {
-        playerScore *= 0;
-        computerScore *= 0;
-      }
-
+      
       function playRound(playerSelection, computerSelection) {
-        playerSelection = getPlayerSelection();
         computerSelection = computerPlay();
         if (playerSelection == rock && computerSelection == rock) {
-          return console.log('It\'s a tie!');
+          checkWinScore();
+          return roundResultText.textContent = 'It\'s a tie!';
         } else if (playerSelection == rock && computerSelection == paper) {
           computerScore += 1;
-          return console.log('You Lose! Paper beats Rock');
+          checkWinScore();
+          return roundResultText.textContent = 'You Lose! Paper beats Rock';
         } else if (playerSelection == rock && computerSelection == scissors) {
           playerScore += 1;
-          return console.log('You Win! Rock beats Scissors');
+          checkWinScore();
+          return roundResultText.textContent = 'You Win! Rock beats Scissors';
         } else if (playerSelection == paper && computerSelection == rock) {
           playerScore += 1;
-          return console.log('You Win! Paper beats Rock');
+          checkWinScore();
+          return roundResultText.textContent = 'You Win! Paper beats Rock';
         } else if (playerSelection == paper && computerSelection == paper) {
-          return console.log('It\'s a tie!');
+          checkWinScore();
+          return roundResultText.textContent = 'It\'s a tie!';
         } else if (playerSelection == paper && computerSelection == scissors) {
           computerScore += 1;
-          return console.log('You Lose! Scissors beat Paper');
+          checkWinScore();
+          return roundResultText.textContent = 'You Lose! Scissors beat Paper';
         } else if (playerSelection == scissors && computerSelection == rock) {
           computerScore += 1;
-          return console.log('You Lose! Rock beats Scissors');
+          checkWinScore();
+          return roundResultText.textContent = 'You Lose! Rock beats Scissors';
         } else if (playerSelection == scissors && computerSelection == paper) {
           playerScore += 1;
-          return console.log('You Win! Scissors beat Paper');
+          checkWinScore();
+          return roundResultText.textContent = 'You Win! Scissors beat Paper';
         } else if (playerSelection == scissors && computerSelection == scissors) {
-          return console.log('It\'s a tie!');       
-        } else {
-          playRound();
+          checkWinScore();
+          return roundResultText.textContent = 'It\'s a tie!';
         }
       }
 
       function endGame () {
+        startMessage.textContent = 'Press "Play Again" to start over the game';
+        playAgainDiv.appendChild(startAgainButton);
+        startAgainButton.addEventListener('click', resetGame);
         if (playerScore > computerScore) {
-          alert(`Congratulations! You Won! 
-            \n Score: ${playerScore} : ${computerScore}`);
-          resetScore();
+          gameResultText.textContent = `Congratulations! You Won!`;
         } else if (playerScore == computerScore) {
-          alert(`It's a tie! Better luck next time! 
-            \n Score: ${playerScore} : ${computerScore}`)
-            resetScore();
+          gameResultText.textContent = `It's a tie! Better luck next time!`
         } else {
-          alert(`I'm afraid you lost. Better luck next time! 
-            \n Score: ${playerScore} : ${computerScore}`)
-            resetScore();
+          gameResultText.textContent = `I'm afraid you lost. Better luck next time!`
         }
       }
 
-      function tryAgain() {
-        if (confirm('Would you like to play again?') == true) {
-          game();
-        } else {
-          return;
-        }
-      }
-
-      function game() {
-        resetScore();
-        playRound();
-        playRound();
-        playRound();
-        playRound();
-        playRound();
-        endGame();
-        tryAgain();
+      function resetGame() {
+        playerScore *= 0;
+        computerScore *= 0;
+        showScore();
+        startMessage.textContent = 'To start playing press one of the buttons:';
+        roundResultText.textContent = '';
+        playAgainDiv.removeChild(startAgainButton);
       }
 
   </script>
