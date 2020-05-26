@@ -3,17 +3,33 @@
 <head>
   <title>Page Title</title>
   <meta charset="UTF-8"/>
+  <link href='style.css' rel='stylesheet'>
+  <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans&display=swap" rel="stylesheet"> 
+  <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
 </head>
 <body>
   <main>
-    <div id='start-message'>To start playing press one of the buttons:</div>
-    <button id='button-rock' class='buttons'>Rock</button>
-    <button id='button-paper' class='buttons'>Paper</button>
-    <button id='button-scissors' class='buttons'>Scissors</button>
-    <div id='player-score'>0</div>
-    <div id='computer-score'>0</div>
-    <div id='game-result-text'></div>
+    <div id='score'>
+      <div id='score-text'>Score:</div>
+      <div id='player-score-block' class='score-blocks'>Player:
+        <div id='player-score' name='score'>0</div>
+      </div>
+      <div id='computer-score-block' class='score-blocks'>Computer:
+        <div id='computer-score' name='score'>0</div>
+      </div>
+    </div>
+
     <div id='round-result-text'></div>
+    <div id='buttons-block'>
+      <button id='button-rock' class='buttons'>
+        <i class="fa fa-hand-rock-o fa-4x" aria-hidden="true"></i><br/>Rock</button>
+      <button id='button-paper' class='buttons'>
+        <i class="fa fa-hand-paper-o fa-4x" aria-hidden="true"></i><br/>Paper</button>
+      <button id='button-scissors' class='buttons'>
+        <i class="fa fa-hand-scissors-o fa-4x" aria-hidden="true"></i><br/>Scissors</button>
+    </div>
+    <div id='start-message'>To start playing press one of the buttons</div>
+    <div id='game-result-text'></div>
     <div id='play-again-div'></div>
   </main>
   <script>
@@ -31,23 +47,40 @@
       const playAgainDiv = document.querySelector('#play-again-div');
       const startAgainButton = document.createElement('button');
       startAgainButton.innerText = 'Play Again';
+      startAgainButton.setAttribute('id', 'play-again-button');
       let roundResultText = document.querySelector('#round-result-text');
       let gameResultText = document.querySelector('#game-result-text');
       let startMessage = document.querySelector('#start-message');
+
 
       buttonRock.addEventListener('click', chooseRock);
       buttonPaper.addEventListener('click', choosePaper);
       buttonScissors.addEventListener('click', chooseScissors);
 
+      function addButtonEvent() {
+        buttonRock.addEventListener('click', chooseRock);
+        buttonPaper.addEventListener('click', choosePaper);
+        buttonScissors.addEventListener('click', chooseScissors);
+      }
+
+      function removeButtonEvent() {
+        buttonRock.removeEventListener('click', chooseRock);
+        buttonPaper.removeEventListener('click', choosePaper);
+        buttonScissors.removeEventListener('click', chooseScissors);
+      }
+
       function chooseRock(e) {
+        startMessage.textContent = '';
         playRound(rock);
         showScore();
       }
       function choosePaper(e) {
+        startMessage.textContent = '';
         playRound(paper);
         showScore();
       }
       function chooseScissors(e) {
+        startMessage.textContent = '';
         playRound(scissors);
         showScore();
       }
@@ -114,9 +147,9 @@
       }
 
       function endGame () {
-        startMessage.textContent = 'Press "Play Again" to start over the game';
         playAgainDiv.appendChild(startAgainButton);
         startAgainButton.addEventListener('click', resetGame);
+        removeButtonEvent();
         if (playerScore > computerScore) {
           gameResultText.textContent = `Congratulations! You Won!`;
         } else if (playerScore == computerScore) {
@@ -130,9 +163,11 @@
         playerScore *= 0;
         computerScore *= 0;
         showScore();
+        gameResultText.textContent = '';
         startMessage.textContent = 'To start playing press one of the buttons:';
         roundResultText.textContent = '';
         playAgainDiv.removeChild(startAgainButton);
+        addButtonEvent();
       }
 
   </script>
