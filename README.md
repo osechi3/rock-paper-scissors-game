@@ -7,3 +7,5 @@ Learning Goals:
 
 UPDATE:
 CSS is added, the game is now playable from the browser.
+
+You can play it here: https://osechi3.github.io/rock-paper-scissors-game/
